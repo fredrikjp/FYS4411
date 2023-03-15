@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.7.15)  4 MAR 2023 13:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.7.15)  13 MAR 2023 18:40
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -715,187 +715,289 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
  (./methods.tex [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (29.39133pt too wide) detected at line 90
+Overfull \hbox (29.39133pt too wide) detected at line 91
 []
  []
 
 [2]
+./methods.tex:107: Missing delimiter (. inserted).
+<to be read again> 
+                   {
+l.107 	\left{
+             
+I was expecting to see something like `(' or `\{' or
+`\}' here. If you typed, e.g., `{' instead of `\{', you
+should probably delete the `{' by typing `1' now, so that
+braces don't get unbalanced. Otherwise just proceed.
+Acceptable delimiters are characters whose \delcode is
+nonnegative, or you can use `\delimiter <delimiter code>'.
 
-LaTeX Warning: Command \o invalid in math mode on input line 109.
+./methods.tex:113: Missing } inserted.
+<inserted text> 
+                }
+l.113 	\right
+             .
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 109.
+LaTeX Warning: Command \o invalid in math mode on input line 135.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 135.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 119.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 145.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 130.
+LaTeX Warning: Command \o invalid in math mode on input line 155.
 
 
-Overfull \hbox (25.86497pt too wide) detected at line 130
+LaTeX Warning: Command \o invalid in math mode on input line 155.
+
+
+Overfull \hbox (57.34567pt too wide) detected at line 155
+[]
+ []
+
+[3]
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+LaTeX Warning: Command \o invalid in math mode on input line 172.
+
+
+Overfull \hbox (61.6558pt too wide) detected at line 172
 []
  []
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 195.
+
+[4]
+
+LaTeX Warning: Command \o invalid in math mode on input line 213.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 213.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 213.
 
 
-LaTeX Warning: Command \o invalid in math mode on input line 138.
+LaTeX Warning: Command \o invalid in math mode on input line 213.
 
-
-LaTeX Warning: Command \o invalid in math mode on input line 138.
-
-[3])
+)
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 63.
- [4]
+ [5]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 63.
  (./project1.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 63.
@@ -908,18 +1010,18 @@ Package logreq Info: Writing requests to 'project1.run.xml'.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 63.
  ) 
 Here is how much of TeX's memory you used:
- 19080 strings out of 481239
- 346135 string characters out of 5920377
- 1023421 words of memory out of 5000000
- 34058 multiletter control sequences out of 15000+600000
+ 19086 strings out of 481239
+ 346201 string characters out of 5920377
+ 1024619 words of memory out of 5000000
+ 34061 multiletter control sequences out of 15000+600000
  547933 words of font info for 83 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 43i,11n,53p,940b,1674s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on project1.pdf (4 pages, 166863 bytes).
+ 43i,14n,53p,940b,1674s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on project1.pdf (5 pages, 196120 bytes).
 PDF statistics:
- 125 PDF objects out of 1000 (max. 8388607)
- 101 compressed objects within 2 object streams
- 17 named destinations out of 1000 (max. 500000)
+ 147 PDF objects out of 1000 (max. 8388607)
+ 119 compressed objects within 2 object streams
+ 20 named destinations out of 1000 (max. 500000)
  33 words of extra memory for PDF output out of 10000 (max. 10000000)
 
