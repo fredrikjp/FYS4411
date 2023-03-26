@@ -9,13 +9,19 @@ print(r.shape[1])
 
 
 class VMC:
-    def __init__(self, alpha, N_particles, beta, a):
+    def __init__(self, N_particles, alpha, beta, a):
         self.alpha = alpha
         self.N_particles = N_particles
         self.beta = beta
         self.a = a
         self.m = 1
         self.h_bar = 1
+
+        # External potential parameters
+        a_ho = 1 # Characteristic dimension of the trap
+        self.om_ho = 1 # Frequency of the harmonic oscillator in xy_plane
+        self.om_z = 1 # Frequency of the harmonic oscillator in z-direction
+
 
     def wavefunction(self, r):
         g = 1
@@ -25,17 +31,17 @@ class VMC:
             g *= np.exp(-self.alpha * np.linalg.norm(r[i, :]) ** 2)
         return g
 
-    def V_ext(self, r, om_z, om_ho):
+    def V_ext(self, r):
         V = 0
+        if len(r[0]) == 3:
+            r[:, 2] *= self.om_z / self.om_ho
         for i in range(self.N_particles):
             V += (
                 1
                 / 2
                 * self.m
-                * (
-                    om_ho**2 * (r[i, 0] ** 2 + r[i, 1] ** 2)
-                    + om_z**2 * r[i, 2] ** 2
-                )
+                * self.om_ho**2
+                * (np.linalg.norm(r[i, :]) ** 2)
             )
         return V
 
@@ -63,7 +69,8 @@ class VMC:
                         * alpha
                         * r[k, :]
                         @ (r[k, :] - r[l, :])
-                        / (r_kl**3 / a - r_kl**2)
+                        * a
+                        / (r_kl**3  - a * r_kl**2)
                         + (a**2 - 2 * a * r_kl) / (r_kl**2 - a * r_kl) ** 2
                         + 2 * a / (r_kl**3 - a * r_kl**2)
                     )
@@ -98,15 +105,16 @@ class VMC:
         PositionOld = np.zeros((self.N_particles, Dimension), np.double)
         PositionNew = np.zeros((self.N_particles, Dimension), np.double)
 
-        for ia in range(1, MaxVariations):
+        for ia in range(MaxVariations):
             alpha_values[ia] = alpha
-            energy = energy2 = 0.0
+            energy = 0.0
+            energy2 = 0.0
             DeltaE = 0.0
             # Initial position
             for i in range(self.N_particles):
                 for j in range(Dimension):
                     PositionOld[i, j] = StepSize * (random() - 0.5)
-            wfold = self.wavefunction(PositionOld, alpha)
+            wfold = self.wavefunction(PositionOld)
             for cycle in range(N_cycles):
                 for i in range(self.N_particles):
                     for j in range(Dimension):
@@ -114,7 +122,7 @@ class VMC:
                         PositionNew[i, j] = PositionOld[i, j] + StepSize * (
                             random() - 0.5
                         )
-                    wfnew = self.wavefunction(PositionNew, alpha)
+                    wfnew = self.wavefunction(PositionNew)
                     # Metropolis test
                     if random() <= wfnew**2 / wfold**2:
                         for j in range(Dimension):
@@ -123,12 +131,31 @@ class VMC:
                 EL = self.local_energy(PositionOld)
                 energy += EL
                 energy2 += EL**2
-            # We calculate mean, variance and error ...
-            energy /= NumberMCcycles
-            energy2 /= NumberMCcycles
+            # Calculate mean, variance and error
+            energy /= N_cycles
+            energy2 /= N_cycles
             variance = energy2 - energy**2
-            error = sqrt(variance / NumberMCcycles)
+            error = np.sqrt(variance / N_cycles)
             Energies[ia] = energy
             Variances[ia] = variance
-            alpha += 0.025
+            alpha += 0.25
+            self.alpha = alpha
         return alpha_values, Energies, Variances
+
+
+if __name__ == "__main__":
+    alpha = 0
+    N_particles = 1
+    beta = 1
+    a = 0  # No interaction
+    N_cycles = 100
+    StepSize = 1
+    MaxVariations = 100
+    Dimension = 3
+    VMC = VMC(N_particles, alpha, beta, a)
+    alpha_values, Energies, Variances = VMC.MC_Sampling(
+        N_cycles, StepSize, MaxVariations, Dimension
+    )
+    print("alpha_values: ", alpha_values)
+    print("Energies: ", Energies)
+    print("Variances: ", Variances)
