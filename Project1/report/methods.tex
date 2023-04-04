@@ -66,14 +66,14 @@ With the spherical potential in \autoref{eq:extpotential} we have
 The local energy for a single particle in the trap is then given by
 \begin{gather*}
 	\frac{1}{exp(-\alpha (x^2+y^2+\beta z^2))}\left[\frac{-\hbar^2}{2m} \nabla^2 + V _{ext}(r)\right]	\exp(-\alpha (x^2+y^2+\beta z^2)) \\
-	= \frac{1}{2}m \omega _{ho}^2(x^2+y^2+z^2) - \frac{\hbar ^2}{4} \omega _{ho}^2 \left(4\alpha^2 (x^2+y^2+\beta^2 z^2) - 4 \alpha -2\alpha \beta \right).\\
+	= \frac{1}{2}m \omega _{ho}^2(x^2+y^2+z^2) - \frac{\hbar ^2}{2m} \left(4\alpha^2 (x^2+y^2+\beta^2 z^2) - 4 \alpha -2\alpha \beta \right).\\
 \end{gather*}
 For spherical traps we have $\beta = 1$ and for non-interacting bosons we have $\alpha =\frac{1}{2}a ^2 _{ho}$. Inserting
 these values we find the local energy to be
 \begin{gather*}
-	E_L(r) = \frac{1}{2}m \omega _{ho}^2(x^2+y^2+z^2) - \frac{\hbar ^2}{4} \omega _{ho}^2 \left(a _{ho}^4 (x^2+y^2+z^2) - 2 a^2 _{ho} -a^2 _{ho} \right) \\
-	= (x^2+y^2+z^2)\left(\frac{1}{2}m\omega _{ho}^2-\frac{\hbar ^2}{4}\omega _{ho}^2a^4 _{ho}\right)-3a^2 _{ho} \\
-	= r^2 \left(\frac{1}{2}m\omega _{ho}^2-\frac{\hbar ^2}{4}\omega _{ho}^2a^4 _{ho}\right)-3a^2 _{ho}.
+	E_L(r) = \frac{1}{2}m \omega _{ho}^2(x^2+y^2+z^2) - \frac{\hbar ^2}{2m} \left(a _{ho}^4 (x^2+y^2+z^2) - 2 a^2 _{ho} -a^2 _{ho} \right) \\
+	= (x^2+y^2+z^2)\left(\frac{1}{2}m\omega _{ho}^2-\frac{\hbar ^2}{2m}a^4 _{ho}\right)-3a^2 _{ho} \\
+	= r^2 \left(\frac{1}{2}m\omega _{ho}^2-\frac{\hbar ^2}{2m}a^4 _{ho}\right)-3a^2 _{ho}.
 \end{gather*}
 We observe the local energy to be symmetric around the origin such that it is only dependent on the
 length $r$ of the position vector $\boldsymbol{r}$.
@@ -86,9 +86,17 @@ with $\beta =1$ and $\alpha =\frac{1}{2}a^2 _{ho}$. This may be written as
 \end{gather*}
 The laplace-operator acting on the new wavefunction gives
 \begin{gather*}
-	\sum_{i=1}^{N} \Delta _{i} \exp(-\alpha (x_i^2+y_i^2+z_i^2)) = \exp(-\alpha \sum_{i=1}^N (x_i^2 + y_i^2 + z_i^2)) \left(4\alpha^2 \sum_{i=1}^N
+	\sum_{i=1}^{N} \Delta _{i} \exp(-\alpha (x_i^2+y_i^2+z_i^2)) \\
+	=\exp(-\alpha \sum_{i=1}^N (x_i^2 + y_i^2 + z_i^2)) \left(4\alpha^2 \sum_{i=1}^N
 	(x_i^2+y_i^2+z_i^2) - 4 \alpha N -2\alpha N \right).
 \end{gather*}
+Thus, the local energy for the wavefunction of N particles is given by
+\begin{gather*}
+E_L(r) =   \sum_{i=1}^{N}
+\left(\frac{-2\hbar ^2 \alpha ^2}{m}\boldsymbol{r_i}^2+V _{ext}(\boldsymbol{r_i}) -
+6 \alpha \right)\\
+\end{gather*}
+
 The drift force to be used in importance sampling is given by
 \begin{gather*}
 	F = \frac{2 \grad \Psi _T}{\Psi _T} = \frac{2\exp(-\alpha (x_i^2+y_i^2+z_i^2))(-2\alpha \boldsymbol{r_i})}{\exp(-\alpha (x_i^2+y_i^2+z_i^2))}
@@ -103,15 +111,13 @@ represented by the hard-sphere potential
 \label{eq:V_int}
 \begin{gathered}
 V _{int} (|\boldsymbol{r_i}-\boldsymbol{r_j}|)= 
-{
-	\left{
+	\left\{
 		\begin{array}{lll}
 			\infty & \mbox{if } |\boldsymbol{r_i}-\boldsymbol{r_j}|
 			\le a \\
-			0 & \mbox{else} 
+			0 & \mbox{else.} 
 		\end{array}
 	\right.
-}
 \end{gathered}
 \end{equation}
 The trial wave function of a system of bosons is given by
