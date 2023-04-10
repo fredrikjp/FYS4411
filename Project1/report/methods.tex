@@ -72,11 +72,12 @@ For spherical traps we have $\beta = 1$ and for non-interacting bosons we have $
 these values we find the local energy to be
 \begin{gather*}
 	E_L(r) = \frac{1}{2}m \omega _{ho}^2(x^2+y^2+z^2) - \frac{\hbar ^2}{2m} \left(a _{ho}^4 (x^2+y^2+z^2) - 2 a^2 _{ho} -a^2 _{ho} \right) \\
-	= (x^2+y^2+z^2)\left(\frac{1}{2}m\omega _{ho}^2-\frac{\hbar ^2}{2m}a^4 _{ho}\right)-3a^2 _{ho} \\
-	= r^2 \left(\frac{1}{2}m\omega _{ho}^2-\frac{\hbar ^2}{2m}a^4 _{ho}\right)-3a^2 _{ho}.
+	= (x^2+y^2+z^2)\left(\frac{1}{2}m\omega _{ho}^2-\frac{\hbar ^2}{2m}a^4
+	_{ho}\right)+\frac{3\hbar ^2}{2m}a^2 _{ho} \\
+	= \boldsymbol{r}^2 \left(\frac{1}{2}m\omega _{ho}^2-\frac{\hbar ^2}{2m}a^4 _{ho}\right)+\frac{3\hbar ^2}{2m}a^2 _{ho}.
 \end{gather*}
 We observe the local energy to be symmetric around the origin such that it is only dependent on the
-length $r$ of the position vector $\boldsymbol{r}$.
+length of the position vector $\boldsymbol{r}$.
 
 
 For N particles in the same potential, the trial wave function is given by \autoref{eq:trial wave function without two-body potential}
@@ -93,8 +94,8 @@ The laplace-operator acting on the new wavefunction gives
 Thus, the local energy for the wavefunction of N particles is given by
 \begin{gather*}
 E_L(r) =   \sum_{i=1}^{N}
-\left(\frac{-2\hbar ^2 \alpha ^2}{m}\boldsymbol{r_i}^2+V _{ext}(\boldsymbol{r_i}) -
-6 \alpha \right)\\
+\left(\frac{-2\hbar ^2 a _{ho} ^4}{4m}\boldsymbol{r_i}^2 + \frac{3 \hbar ^2
+a _{ho}^2}{2m} + V _{ext}(\boldsymbol{r_i}) \right)\\
 \end{gather*}
 
 The drift force to be used in importance sampling is given by
@@ -120,6 +121,7 @@ V _{int} (|\boldsymbol{r_i}-\boldsymbol{r_j}|)=
 	\right.
 \end{gathered}
 \end{equation}
+
 The trial wave function of a system of bosons is given by
 \begin{equation}
 	\label{eq:trial wave function with two-body potential}
