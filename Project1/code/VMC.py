@@ -1,14 +1,22 @@
 import numpy as np
 from random import random, seed
-from autograd import grad
 import time
+from numba import int32, float64
+from numba.experimental import jitclass
 
-"""
-r = np.array([[0,0,1],[0,0,2]])
-print(r.shape[1])
-"""
+spec = [
+    ("alpha", float64),
+    ("N_particles", int32),
+    ("beta", float64),
+    ("a", float64),
+    ("m", float64),
+    ("h_bar", float64),
+    ("a_ho", float64),
+    ("om_ho", float64),
+    ("om_z", float64),
+]
 
-
+#@jitclass(spec)
 class VMC:
     def __init__(self, N_particles, alpha, beta, a):
         self.alpha = alpha
@@ -19,12 +27,12 @@ class VMC:
         self.h_bar = 1
 
         # External potential parameters
-        a_ho = 1  # Characteristic dimension of the trap
+        self.a_ho = 1  # Characteristic dimension of the trap
         self.om_ho = 1  # Frequency of the harmonic oscillator in xy_plane
         self.om_z = 1  # Frequency of the harmonic oscillator in z-direction
 
     def wavefunction(self, r):
-        g = 1
+        g = 1.0
         for i in range(self.N_particles):
             if r.shape[1] == 3:
                 r[i, 2] *= np.sqrt(self.beta)
@@ -96,9 +104,12 @@ class VMC:
         )
         return EL
 
-    def MC_Sampling(self, N_cycles, StepSize, MaxVariations, Dimension, KE = False):
+    def MC_Sampling(
+        self, N_cycles, StepSize, MaxVariations, Dimension, KE=False
+    ):
         alpha = self.alpha
         alpha_values = np.zeros(MaxVariations)
+        analytic_local_energies = np.zeros(MaxVariations)
         local_energies = np.zeros(MaxVariations)
         Variances = np.zeros(MaxVariations)
         Kinetic_energies = np.zeros(MaxVariations)
@@ -109,6 +120,7 @@ class VMC:
         PositionNew = np.zeros((self.N_particles, Dimension), np.double)
 
         for ia in range(MaxVariations):
+            print(f"{ia*100/MaxVariations}%")
             alpha_values[ia] = alpha
             energy = 0.0
             energy2 = 0.0
@@ -121,6 +133,8 @@ class VMC:
 
             time_EL = 0
             time_KE = 0
+
+            analytic_local_energies[ia] = self.analytic_solution(PositionOld)
             for cycle in range(N_cycles):
                 for i in range(self.N_particles):
                     for j in range(Dimension):
@@ -137,17 +151,16 @@ class VMC:
                 start_time_EL = time.time()
                 EL = self.local_energy(PositionOld)
                 end_time_EL = time.time()
-                time_EL += end_time_EL - start_time_EL 
+                time_EL += end_time_EL - start_time_EL
 
                 energy += EL
                 energy2 += EL**2
-                
+
                 if KE:
                     start_time_KE = time.time()
                     kinetic_energy += self.kinetic_energy(PositionOld)
                     end_time_KE = time.time()
                     time_KE += end_time_KE - start_time_KE
-
 
             # Calculate mean, variance and error
             energy /= N_cycles
@@ -161,45 +174,97 @@ class VMC:
 
             avg_time_EL[ia] = time_EL / N_cycles
             avg_time_KE[ia] = time_KE / N_cycles
-            
 
-            alpha += 0.01
+            alpha += 0.1
             self.alpha = alpha
 
-        Energies = {"local_energy": local_energies, "kinetic_energy": Kinetic_energies}
-        time_stats = {"avarage_time_EL": avg_time_EL, "avarage_time_KE": avg_time_KE}
-        return alpha_values, Energies, Variances, time_stats
+        Energies = {
+            "local_energy": local_energies,
+            "kinetic_energy": Kinetic_energies,
+        }
+        time_stats = {
+            "avarage_time_EL": avg_time_EL,
+            "avarage_time_KE": avg_time_KE,
+        }
+        return (
+            alpha_values,
+            analytic_local_energies,
+            Energies,
+            Variances,
+            time_stats,
+        )
 
     def kinetic_energy(self, r, h=0.001):
-        # Calculate the laplace operator acting on the wavefunction numerically 
+        # Calculate the laplace operator acting on the wavefunction numerically
         # using finite difference
         laplacian = 0
         for i in range(self.N_particles):
             for dim in range(len(r[0])):
-                r1 = r.copy() 
+                r1 = r.copy()
                 r1[i, dim] -= h
-                r2 = r.copy() 
+                r2 = r.copy()
                 r2[i, dim] += h
-                laplacian += (self.wavefunction(r1) - 2 * self.wavefunction(r) + self.wavefunction(r2)) / h**2
-        # Estimation of total kinetic energy of the wavefunction's boson(s) at r 
-        T = -1/2 * laplacian / self.wavefunction(r)
+                laplacian += (
+                    self.wavefunction(r1)
+                    - 2 * self.wavefunction(r)
+                    + self.wavefunction(r2)
+                ) / h**2
+        # Estimation of total kinetic energy of the wavefunction's boson(s) at r
+        T = -1 / 2 * laplacian / self.wavefunction(r)
         return T
+
+    def analytic_solution(self, r):
+        # Analytic solution for the spherical trap without interaction
+        if len(r) == 1:
+            EL = (
+                np.sum(r * r)
+                * (
+                    1 / 2 * self.m * self.om_ho**2
+                    - self.h_bar**2 / (2 * self.m) * self.a_ho**4
+                )
+                + 3 * self.h_bar**2 / (2 * self.m) * self.a_ho**2
+            )
+        elif len(r) > 1:
+            EL = (
+                -2
+                * self.h_bar**2
+                * 1 / 4
+                * self.a_ho**4 / self.m
+                * np.sum(r * r)
+                + 3 * self.h_bar**2 / (2*self.m) * self.a_ho**2 * self.N_particles
+                + np.sum(self.V_ext(r))
+            )
+        else:
+            raise ValueError("Positions not initialized")
+        return EL
 
 
 if __name__ == "__main__":
     alpha = 0.1
-    N_particles = 1 
+    N_particles = 10
     beta = 1
     a = 0  # No interaction
-    N_cycles = 10000
+    N_cycles = 100
     StepSize = 1
-    MaxVariations = 100
+    MaxVariations = 10
     Dimension = 3
-    VMC = VMC(N_particles, alpha, beta, a)
-    alpha_values, Energies, Variances, time_stats = VMC.MC_Sampling(
-        N_cycles, StepSize, MaxVariations, Dimension, KE = True
+    VMC_obj = VMC(N_particles, alpha, beta, a)
+    (
+        alpha_values,
+        analytic_local_energies,
+        Energies,
+        Variances,
+        time_stats,
+    ) = VMC_obj.MC_Sampling(
+        N_cycles, StepSize, MaxVariations, Dimension, KE=True
     )
     print("alpha_values: ", alpha_values)
+    print("analytic_local_energies: ", analytic_local_energies)
     print("Energies: ", Energies)
     print("Variances: ", Variances)
     print("time_stats: ", time_stats)
+
+
+
+
+
