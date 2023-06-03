@@ -63,10 +63,11 @@ class VMC:
         return V
 
     def local_energy(self, r):
+        """
         alpha = self.alpha
         a = self.a
         # sum of laplacian_k acting on Psi_T and divided by Psi_T
-        laplacian_sum = 0
+        laplacian_sum2 = 0
         for k in range(self.N_particles):
             laplacian_term = 4 * alpha**2 * r[k, :] @ r[k, :] - 6 * alpha
             for l in range(self.N_particles):
@@ -92,10 +93,66 @@ class VMC:
                                 / (
                                     (r_kl**2 - a * r_kl)
                                     * (r_kj**2 - a * r_kj)
-                                    * (r_kl * r_kj)
-                                )
+                                    * (r_kl * r_kj))
                             )
-            laplacian_sum += laplacian_term
+            laplacian_sum2 += laplacian_term
+            print(laplacian_term)
+        print(laplacian_sum2)
+        """
+
+        #######################################################################
+        alpha = self.alpha
+        a = self.a
+        N = self.N_particles
+        # Cache repeated calculations
+        r_diff = r[:, np.newaxis, :] - r[np.newaxis, :, :]
+        r_norm = np.linalg.norm(r_diff, axis=-1)
+        r_norm[r_norm < 1e-12] = 1e-12  # avoid division by zero
+
+        # Remove diagonal elements as these are not used in the
+        # calculation of the laplacian term
+        r_diff = np.delete(
+            r_diff.reshape(N**2, 3), np.arange(N**2, step=N + 1), axis=0
+        ).reshape(N, N - 1, 3)
+        r_norm = np.delete(
+            r_norm.reshape(N**2), np.arange(N**2, step=N + 1), axis=0
+        ).reshape(N, N - 1)
+
+        # Calculate laplacian sum
+        # breakpoint()
+
+        laplacian_sum = (
+            4 * alpha**2 * np.einsum("ij,ij->i", r, r)
+            - 6 * alpha
+            - 4
+            * alpha
+            * a
+            * np.sum(r
+            @ np.sum(r_diff, axis=(1)).T, axis=1)
+            / np.sum(r_norm**3 - a * r_norm**2, axis=-1)
+            + np.sum((a**2 - 2 * a * r_norm) / (r_norm**2 - a * r_norm)**2
+                     + 2 * a / (r_norm**3 - a * r_norm**2), axis=-1)
+            #+ (a**2 * np.einsum("ijk,ik->i", r_diff, np.sum(r_diff, axis=1)))
+
+        ) 
+        """
+        for i in range(N-1):
+            laplacian_sum += (
+                a**2
+                * np.einsum(
+                    "jk,k->j", r_diff[:, i, :], np.sum(r_diff[:, i, :], axis=0)
+                )
+                / np.sum(
+                    (r_norm[i, :] ** 2 - a * r_norm[i, :])
+                    * np.sum(r_norm[i, :] ** 2 - a * r_norm[i, :])
+                    * r_norm[i, :]
+                    * np.sum(r_norm[i, :])
+                )
+            )
+        """
+        laplacian_sum = np.sum(laplacian_sum)
+        #######################################################################
+
         # Local energy
         EL = (
             -self.h_bar**2 / (2 * self.m) * laplacian_sum
