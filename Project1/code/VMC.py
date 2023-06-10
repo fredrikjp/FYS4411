@@ -196,7 +196,9 @@ class VMC:
                 for i in range(self.N_particles):
                     for j in range(Dimension):
                         # New position
-                        PositionNew[i, j] = PositionOld[i, j] + StepSize * (random() - 0.5) + QuantumForceOld[i,j]*StepSize*D
+                        PositionNew[i, j] = PositionOld[i, j] + StepSize * (
+                            random() - 0.5
+                        )
 
                     wfnew = self.wavefunction(PositionNew)
                     # Metropolis test
