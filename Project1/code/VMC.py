@@ -199,6 +199,7 @@ class VMC:
                         PositionNew[i, j] = PositionOld[i, j] + StepSize * (
                             random() - 0.5
                         )
+
                     wfnew = self.wavefunction(PositionNew)
                     # Metropolis test
                     if random() <= wfnew**2 / wfold**2:
@@ -251,6 +252,132 @@ class VMC:
             time_stats,
         )
 
+
+    def QuantumForce(r,alpha,beta):
+        qforce = np.zeros((N_Particles,Dimension), np.double)
+        r12 = sqrt((r[0,0]-r[1,0])**2 + (r[0,1]-r[1,1])**2)
+        deno = 1.0/(1+beta*r12)
+        qforce[0,:] = -2*r[0,:]*alpha*(r[0,:]-r[1,:])*deno*deno/r12
+        qforce[1,:] = -2*r[1,:]*alpha*(r[1,:]-r[0,:])*deno*deno/r12
+        return qforce
+     
+
+
+    def MC_Sampling_IS(
+        self, N_cycles, StepSize, MaxVariations, Dimension, KE=False
+    ):
+        alpha = self.alpha
+        alpha_values = np.zeros(MaxVariations)
+        beta = self.beta
+        beta_values = np.zeros(MaxVariations)
+        analytic_local_energies = np.zeros(MaxVariations)
+        local_energies = np.zeros(MaxVariations)
+        Variances = np.zeros(MaxVariations)
+        Kinetic_energies = np.zeros(MaxVariations)
+        avg_time_EL = np.zeros(MaxVariations)
+        avg_time_KE = np.zeros(MaxVariations)
+
+        PositionOld = np.zeros((self.N_particles, Dimension), np.double)
+        PositionNew = np.zeros((self.N_particles, Dimension), np.double)
+
+        D = 0.5
+
+        QuantumForceOld = np.zeros((self.N_particles, Dimension), np.double)
+        QuantumForceNew = np.zeros((self.N_particles, Dimension), np.double)
+
+        
+        for ia in range(MaxVariations):
+            print(f"{ia*100/MaxVariations}%")
+            alpha_values[ia] = alpha
+            beta = 0.3
+            for jb in range(MaxVariations):
+                beta += .025
+                BetaValues[jb] = beta
+                energy = 0.0
+                energy2 = 0.0
+                kinetic_energy = 0.
+                DeltaE = 0.0
+                # Initial position
+                for i in range(self.N_particles):
+                    for j in range(Dimension):
+                        PositionOld[i, j] = StepSize * (random() - 0.5)
+                
+                wfold = self.wavefunction(PositionOld)
+                QuantumForceOld = QuantumForce(PositionOld,alpha, beta)
+
+
+
+                time_EL = 0
+                time_KE = 0
+
+                analytic_local_energies[ia] = self.analytic_solution(PositionOld)
+                for cycle in range(N_cycles):
+                    for i in range(self.N_particles):
+                        for j in range(Dimension):
+                            # New position
+                            PositionNew[i, j] = PositionOld[i, j] + StepSize * (
+                                random() - 0.5) + QuantumForceOld[i,j]*StepSize*D
+                        wfnew = self.wavefunction(PositionNew)
+                        QuantumForceNew = QuantumForce(PositionNew,alpha, beta)
+                        GreensFunction = 0.0
+
+                        for j in range(Dimension):
+                            GreensFunction += 0.5*(QuantumForceOld[i,j]+QuantumForceNew[i,j])*(D*StepSize*0.5*(QuantumForceOld[i,j]-QuantumForceNew[i,j])-PositionNew[i,j]+PositionOld[i,j])
+                        GreensFunction = exp(GreensFunction)
+                        # Metropolis test
+                        if random() <= GreensFunction*wfnew**2 / wfold**2:
+                            for j in range(Dimension):
+                                PositionOld[i, j] = PositionNew[i, j]
+                                QuantumForceOld[i,j] = QuantumForceNew[i,j]
+                            wfold = wfnew
+
+                    start_time_EL = time.time()
+                    EL = self.local_energy(PositionOld)
+                    end_time_EL = time.time()
+                    time_EL += end_time_EL - start_time_EL
+
+                    energy += EL
+                    energy2 += EL**2
+
+                    if KE:
+                        start_time_KE = time.time()
+                        kinetic_energy += self.kinetic_energy(PositionOld)
+                        end_time_KE = time.time()
+                        time_KE += end_time_KE - start_time_KE
+
+            # Calculate mean, variance and error
+            energy /= N_cycles
+            energy2 /= N_cycles
+            variance = energy2 - energy**2
+            error = np.sqrt(variance / N_cycles)
+            local_energies[ia] = energy
+            Variances[ia] = variance
+            kinetic_energy /= N_cycles
+            Kinetic_energies[ia] = kinetic_energy
+            avg_time_EL[ia] = time_EL / N_cycles
+            avg_time_KE[ia] = time_KE / N_cycles
+
+            alpha += 0.05
+            self.alpha = alpha
+
+        Energies = {
+            "local_energy": local_energies,
+            "kinetic_energy": Kinetic_energies,
+        }
+        time_stats = {
+            "avarage_time_EL": avg_time_EL,
+            "avarage_time_KE": avg_time_KE,
+        }
+        return (
+            alpha_values,
+            analytic_local_energies,
+            Energies,
+            Variances,
+            time_stats,
+        )
+
+
+
     def kinetic_energy(self, r, h=0.001):
         # Calculate the laplace operator acting on the wavefunction numerically
         # using finite difference
@@ -302,7 +429,7 @@ if __name__ == "__main__":
     beta = 1
     a = 0  # No interaction
     N_cycles = 100
-    StepSize = 1
+    StepSize = .1
     MaxVariations = 10
     Dimension = 3
     VMC_obj = VMC(N_particles, alpha, beta, a)
@@ -320,8 +447,3 @@ if __name__ == "__main__":
     print("Energies: ", Energies)
     print("Variances: ", Variances)
     print("time_stats: ", time_stats)
-
-
-
-
-
