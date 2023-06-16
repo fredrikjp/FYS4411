@@ -39,6 +39,12 @@ class VMC:
             g *= np.exp(-self.alpha * np.linalg.norm(r[i, :]) ** 2)
         return g
 
+    def QuantumForce(self, r, alpha, beta):
+        if r.shape[1] == 3:
+            r[:, 2] *= np.sqrt(beta)
+        qforce = -4 * alpha * np.sum(r, axis=0)
+        return qforce
+
     def V_ext(self, r):
         V = 0
         if len(r[0]) == 3:
@@ -62,94 +68,93 @@ class VMC:
                     V += np.inf
         return V
 
-    def local_energy(self, r):
-        """
-        alpha = self.alpha
-        a = self.a
-        # sum of laplacian_k acting on Psi_T and divided by Psi_T
-        laplacian_sum2 = 0
-        for k in range(self.N_particles):
-            laplacian_term = 4 * alpha**2 * r[k, :] @ r[k, :] - 6 * alpha
-            for l in range(self.N_particles):
-                if l != k:
-                    r_kl = np.linalg.norm(r[k, :] - r[l, :])
-                    laplacian_term += (
-                        -4
-                        * alpha
-                        * r[k, :]
-                        @ (r[k, :] - r[l, :])
-                        * a
-                        / (r_kl**3 - a * r_kl**2)
-                        + (a**2 - 2 * a * r_kl) / (r_kl**2 - a * r_kl) ** 2
-                        + 2 * a / (r_kl**3 - a * r_kl**2)
+    def local_energy(self, r, dim):
+        laplacian_sum = 0
+        if dim == 1 or dim == 2:
+            alpha = self.alpha
+            a = self.a
+            # sum of laplacian_k acting on Psi_T and divided by Psi_T
+            laplacian_sum2 = 0
+            for k in range(self.N_particles):
+                laplacian_term = 4 * alpha**2 * r[k, :] @ r[k, :] - 6 * alpha
+                for l in range(self.N_particles):
+                    if l != k:
+                        r_kl = np.linalg.norm(r[k, :] - r[l, :])
+                        laplacian_term += (
+                            -4
+                            * alpha
+                            * r[k, :]
+                            @ (r[k, :] - r[l, :])
+                            * a
+                            / (r_kl**3 - a * r_kl**2)
+                            + (a**2 - 2 * a * r_kl) / (r_kl**2 - a * r_kl) ** 2
+                            + 2 * a / (r_kl**3 - a * r_kl**2)
+                        )
+                        for j in range(self.N_particles):
+                            if j != k:
+                                r_kj = np.linalg.norm(r[k, :] - r[j, :])
+                                laplacian_term += (
+                                    a**2
+                                    * (r[k, :] - r[j, :])
+                                    @ (r[k, :] - r[l, :])
+                                    / (
+                                        (r_kl**2 - a * r_kl)
+                                        * (r_kj**2 - a * r_kj)
+                                        * (r_kl * r_kj))
+                                )
+                laplacian_sum += laplacian_term
+
+        else:
+            #######################################################################
+            alpha = self.alpha
+            a = self.a
+            N = self.N_particles
+            # Cache repeated calculations
+            r_diff = r[:, np.newaxis, :] - r[np.newaxis, :, :]
+            r_norm = np.linalg.norm(r_diff, axis=-1)
+            r_norm[r_norm < 1e-12] = 1e-12  # avoid division by zero
+
+            # Remove diagonal elements as these are not used in the
+            # calculation of the laplacian term
+            r_diff = np.delete(
+                r_diff.reshape(N**2, 3), np.arange(N**2, step=N + 1), axis=0
+            ).reshape(N, N - 1, 3)
+            r_norm = np.delete(
+                r_norm.reshape(N**2), np.arange(N**2, step=N + 1), axis=0
+            ).reshape(N, N - 1)
+
+            # Calculate laplacian sum
+            # breakpoint()
+
+            laplacian_sum = (
+                4 * alpha**2 * np.einsum("ij,ij->i", r, r)
+                - 6 * alpha
+                - 4
+                * alpha
+                * a
+                * np.sum(r
+                @ np.sum(r_diff, axis=(1)).T, axis=1)
+                / np.sum(r_norm**3 - a * r_norm**2, axis=-1)
+                + np.sum((a**2 - 2 * a * r_norm) / (r_norm**2 - a * r_norm)**2
+                         + 2 * a / (r_norm**3 - a * r_norm**2), axis=-1)
+                #+ (a**2 * np.einsum("ijk,ik->i", r_diff, np.sum(r_diff, axis=1)))
+
+            ) 
+            for i in range(N-1):
+                laplacian_sum += (
+                    a**2
+                    * np.einsum(
+                        "jk,k->j", r_diff[:, i, :], np.sum(r_diff[:, i, :], axis=0)
                     )
-                    for j in range(self.N_particles):
-                        if j != k:
-                            r_kj = np.linalg.norm(r[k, :] - r[j, :])
-                            laplacian_term += (
-                                a**2
-                                * (r[k, :] - r[j, :])
-                                @ (r[k, :] - r[l, :])
-                                / (
-                                    (r_kl**2 - a * r_kl)
-                                    * (r_kj**2 - a * r_kj)
-                                    * (r_kl * r_kj))
-                            )
-            laplacian_sum2 += laplacian_term
-            print(laplacian_term)
-        print(laplacian_sum2)
-        """
-
-        #######################################################################
-        alpha = self.alpha
-        a = self.a
-        N = self.N_particles
-        # Cache repeated calculations
-        r_diff = r[:, np.newaxis, :] - r[np.newaxis, :, :]
-        r_norm = np.linalg.norm(r_diff, axis=-1)
-        r_norm[r_norm < 1e-12] = 1e-12  # avoid division by zero
-
-        # Remove diagonal elements as these are not used in the
-        # calculation of the laplacian term
-        r_diff = np.delete(
-            r_diff.reshape(N**2, 3), np.arange(N**2, step=N + 1), axis=0
-        ).reshape(N, N - 1, 3)
-        r_norm = np.delete(
-            r_norm.reshape(N**2), np.arange(N**2, step=N + 1), axis=0
-        ).reshape(N, N - 1)
-
-        # Calculate laplacian sum
-        # breakpoint()
-
-        laplacian_sum = (
-            4 * alpha**2 * np.einsum("ij,ij->i", r, r)
-            - 6 * alpha
-            - 4
-            * alpha
-            * a
-            * np.sum(r
-            @ np.sum(r_diff, axis=(1)).T, axis=1)
-            / np.sum(r_norm**3 - a * r_norm**2, axis=-1)
-            + np.sum((a**2 - 2 * a * r_norm) / (r_norm**2 - a * r_norm)**2
-                     + 2 * a / (r_norm**3 - a * r_norm**2), axis=-1)
-            #+ (a**2 * np.einsum("ijk,ik->i", r_diff, np.sum(r_diff, axis=1)))
-
-        ) 
-        for i in range(N-1):
-            laplacian_sum += (
-                a**2
-                * np.einsum(
-                    "jk,k->j", r_diff[:, i, :], np.sum(r_diff[:, i, :], axis=0)
+                    / np.sum(
+                        (r_norm[i, :] ** 2 - a * r_norm[i, :])
+                        * np.sum(r_norm[i, :] ** 2 - a * r_norm[i, :])
+                        * r_norm[i, :]
+                        * np.sum(r_norm[i, :])
+                    )
                 )
-                / np.sum(
-                    (r_norm[i, :] ** 2 - a * r_norm[i, :])
-                    * np.sum(r_norm[i, :] ** 2 - a * r_norm[i, :])
-                    * r_norm[i, :]
-                    * np.sum(r_norm[i, :])
-                )
-            )
-        laplacian_sum = np.sum(laplacian_sum)
-        #######################################################################
+            laplacian_sum = np.sum(laplacian_sum)
+            #######################################################################
 
         # Local energy
         EL = (
@@ -205,7 +210,7 @@ class VMC:
                             PositionOld[i, j] = PositionNew[i, j]
                         wfold = wfnew
                 start_time_EL = time.time()
-                EL = self.local_energy(PositionOld)
+                EL = self.local_energy(PositionOld, Dimension)
                 end_time_EL = time.time()
                 time_EL += end_time_EL - start_time_EL
 
@@ -250,14 +255,6 @@ class VMC:
             time_stats,
         )
 
-
-    def QuantumForce(r,alpha,beta):
-        qforce = np.zeros((N_Particles,Dimension), np.double)
-        r12 = sqrt((r[0,0]-r[1,0])**2 + (r[0,1]-r[1,1])**2)
-        deno = 1.0/(1+beta*r12)
-        qforce[0,:] = -2*r[0,:]*alpha*(r[0,:]-r[1,:])*deno*deno/r12
-        qforce[1,:] = -2*r[1,:]*alpha*(r[1,:]-r[0,:])*deno*deno/r12
-        return qforce
      
 
 
@@ -423,7 +420,7 @@ class VMC:
 
 if __name__ == "__main__":
     alpha = 0.1
-    N_particles = 10
+    N_particles = 1
     beta = 1
     a = 0  # No interaction
     N_cycles = 100
