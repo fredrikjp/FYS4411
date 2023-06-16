@@ -135,7 +135,6 @@ class VMC:
             #+ (a**2 * np.einsum("ijk,ik->i", r_diff, np.sum(r_diff, axis=1)))
 
         ) 
-        """
         for i in range(N-1):
             laplacian_sum += (
                 a**2
@@ -149,7 +148,6 @@ class VMC:
                     * np.sum(r_norm[i, :])
                 )
             )
-        """
         laplacian_sum = np.sum(laplacian_sum)
         #######################################################################
 
