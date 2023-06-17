@@ -432,13 +432,13 @@ class VMC:
 
 if __name__ == "__main__":
     alpha = 0.1
-    N_particles = 1
+    N_particles = 2
     beta = 1
     a = 0  # No interaction
     N_cycles = 100
     StepSize = .1
     MaxVariations = 10
-    Dimension = 1
+    Dimension = 3
     VMC_obj = VMC(N_particles, alpha, beta, a)
     (
         alpha_values,
