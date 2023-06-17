@@ -70,11 +70,20 @@ class VMC:
 
     def local_energy(self, r, dim):
         laplacian_sum = 0
+        if self.N_particles == 1:
+            laplacian_sum += 4*self.alpha**2*np.sum(r**2) - 6*self.alpha
+            # Local energy
+            EL = (
+                -self.h_bar**2 / (2 * self.m) * laplacian_sum
+                + self.V_ext(r)
+                + self.V_int(r)
+            )
+            return EL
+
         if dim == 1 or dim == 2:
             alpha = self.alpha
             a = self.a
             # sum of laplacian_k acting on Psi_T and divided by Psi_T
-            laplacian_sum2 = 0
             for k in range(self.N_particles):
                 laplacian_term = 4 * alpha**2 * r[k, :] @ r[k, :] - 6 * alpha
                 for l in range(self.N_particles):
@@ -106,6 +115,7 @@ class VMC:
 
         else:
             #######################################################################
+            
             alpha = self.alpha
             a = self.a
             N = self.N_particles
@@ -122,7 +132,8 @@ class VMC:
             r_norm = np.delete(
                 r_norm.reshape(N**2), np.arange(N**2, step=N + 1), axis=0
             ).reshape(N, N - 1)
-
+            
+            
             # Calculate laplacian sum
             # breakpoint()
 
@@ -165,7 +176,8 @@ class VMC:
         return EL
 
     def MC_Sampling(
-        self, N_cycles, StepSize, MaxVariations, Dimension, KE=False
+        self, N_cycles, StepSize, MaxVariations, Dimension, KE=False,
+        Importance_sampling = False
     ):
         alpha = self.alpha
         alpha_values = np.zeros(MaxVariations)
@@ -426,7 +438,7 @@ if __name__ == "__main__":
     N_cycles = 100
     StepSize = .1
     MaxVariations = 10
-    Dimension = 3
+    Dimension = 1
     VMC_obj = VMC(N_particles, alpha, beta, a)
     (
         alpha_values,
