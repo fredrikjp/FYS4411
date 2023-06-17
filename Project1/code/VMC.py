@@ -80,7 +80,7 @@ class VMC:
             )
             return EL
 
-        if dim == 1 or dim == 2:
+        if False:#dim == 1 or dim == 2:
             alpha = self.alpha
             a = self.a
             # sum of laplacian_k acting on Psi_T and divided by Psi_T
@@ -127,8 +127,8 @@ class VMC:
             # Remove diagonal elements as these are not used in the
             # calculation of the laplacian term
             r_diff = np.delete(
-                r_diff.reshape(N**2, 3), np.arange(N**2, step=N + 1), axis=0
-            ).reshape(N, N - 1, 3)
+                r_diff.reshape(N**2, dim), np.arange(N**2, step=N + 1), axis=0
+            ).reshape(N, N - 1, dim)
             r_norm = np.delete(
                 r_norm.reshape(N**2), np.arange(N**2, step=N + 1), axis=0
             ).reshape(N, N - 1)
@@ -432,13 +432,13 @@ class VMC:
 
 if __name__ == "__main__":
     alpha = 0.1
-    N_particles = 2
+    N_particles = 1
     beta = 1
     a = 0  # No interaction
     N_cycles = 100
     StepSize = .1
     MaxVariations = 10
-    Dimension = 3
+    Dimension = 2
     VMC_obj = VMC(N_particles, alpha, beta, a)
     (
         alpha_values,
